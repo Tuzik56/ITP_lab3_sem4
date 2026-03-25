@@ -1,4 +1,4 @@
-package com.example.ITP_lab3_sem4;
+package com.example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

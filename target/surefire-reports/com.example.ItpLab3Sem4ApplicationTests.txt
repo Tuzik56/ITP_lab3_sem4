@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.example.ItpLab3Sem4ApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.709 s -- in com.example.ItpLab3Sem4ApplicationTests
