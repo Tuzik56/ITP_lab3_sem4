@@ -16,8 +16,8 @@ public class NotificationController {
     }
 
     @GetMapping("/notify")
-    public String notify(@RequestParam String message, @RequestParam String email) {
-        notificationManager.notify(message, email);
+    public String notify(@RequestParam String type, @RequestParam String message, @RequestParam String email) {
+        notificationManager.notify(type, message, email);
         return "Уведомление отправлено (аннотации)";
     }
 }
