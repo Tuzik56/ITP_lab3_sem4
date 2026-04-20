@@ -9,6 +9,7 @@ import com.example.model.enums.NotificationStatus;
 import com.example.repository.NotificationRepository;
 import com.example.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +21,7 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public Notification createNotification(NotificationDto request) {
 
         User user = userRepository.findById(request.getRecipientId()).orElseThrow();
@@ -31,7 +33,13 @@ public class NotificationService {
         notification.setCreatedAt(LocalDateTime.now());
         notification.setRecipient(user);
 
-        return notificationRepository.save(notification);
+        notificationRepository.save(notification);
+
+//        if (true) {
+//            throw new RuntimeException("Искусственная ошибка");
+//        }
+
+        return notification;
     }
 
     public List<Notification> getAllNotifications() {

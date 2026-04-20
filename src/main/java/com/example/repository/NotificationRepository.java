@@ -24,19 +24,19 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findByStatusOrderByCreatedAtAsc(NotificationStatus status);
 
     @Query("""
-            select n
-            from Notification n
-            where n.status = :status
-            and n.channel = :channel
-            """)
+    select n
+    from Notification n
+    where n.status = :status
+    and n.channel = :channel
+    """)
     List<Notification> findByStatusAndChannelCustom(@Param("status") NotificationStatus status,
                                                     @Param("channel") NotificationChannel channel);
     @Query(value = """
-        select *
-        from notifications
-        where status = :status
-        and channel = :channel
-        """, nativeQuery = true)
+    select *
+    from notifications
+    where status = :status
+    and channel = :channel
+    """, nativeQuery = true)
     List<Notification> findNativeByStatusAndChannel(@Param("status") String status,
                                                     @Param("channel") String channel);
 }
