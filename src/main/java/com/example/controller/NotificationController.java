@@ -1,23 +1,131 @@
 package com.example.controller;
 
-import com.example.service.NotificationManager;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import com.example.model.dto.NotificationDto;
+import com.example.model.entity.Notification;
+import com.example.model.enums.NotificationChannel;
+import com.example.model.enums.NotificationStatus;
+import com.example.service.NotificationService;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 @RestController
+@RequestMapping("/notifications")
+@RequiredArgsConstructor
 public class NotificationController {
 
-    private final NotificationManager notificationManager;
+    private final NotificationService notificationService;
 
-    public NotificationController (NotificationManager notificationManager) {
-        this.notificationManager = notificationManager;
+    @PostMapping("/add")
+    public NotificationDto createNotification(@RequestBody @Valid NotificationDto request) {
+        Notification response = notificationService.createNotification(request);
+
+        return NotificationDto.builder()
+                .title(response.getTitle())
+                .message(response.getMessage())
+                .channel(response.getChannel())
+                .status(response.getStatus())
+                .createdAt(response.getCreatedAt())
+                .sentAt(response.getSentAt())
+                .recipientId(response.getRecipient().getId())
+                .build();
     }
 
-    @GetMapping("/notify")
-    public String notify(@RequestParam String type, @RequestParam String message, @RequestParam String email) {
-        notificationManager.notify(type, message, email);
-        return "Уведомление отправлено (аннотации)";
+    @GetMapping("/all")
+    public List<NotificationDto> getAllNotifications() {
+        return notificationService.getAllNotifications().stream()
+                .map(response -> NotificationDto.builder()
+                        .title(response.getTitle())
+                        .message(response.getMessage())
+                        .channel(response.getChannel())
+                        .status(response.getStatus())
+                        .createdAt(response.getCreatedAt())
+                        .sentAt(response.getSentAt())
+                        .recipientId(response.getRecipient().getId())
+                        .build())
+                .toList();
+    }
+
+    @GetMapping("/{id}")
+    public NotificationDto getNotificationById(@PathVariable Long id) {
+        Notification response = notificationService.getNotificationById(id);
+
+        return NotificationDto.builder()
+                .title(response.getTitle())
+                .message(response.getMessage())
+                .channel(response.getChannel())
+                .status(response.getStatus())
+                .createdAt(response.getCreatedAt())
+                .sentAt(response.getSentAt())
+                .recipientId(response.getRecipient().getId())
+                .build();
+    }
+
+    @PutMapping("/{id}")
+    public NotificationDto updateNotification(@PathVariable Long id, @RequestBody @Valid NotificationDto request) {
+        Notification response = notificationService.updateNotification(id, request);
+
+        return NotificationDto.builder()
+                .title(response.getTitle())
+                .message(response.getMessage())
+                .channel(response.getChannel())
+                .status(response.getStatus())
+                .createdAt(response.getCreatedAt())
+                .sentAt(response.getSentAt())
+                .recipientId(response.getRecipient().getId())
+                .build();
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteNotification(@PathVariable Long id) {
+        notificationService.deleteNotification(id);
+        return "Уведомление удалено";
+    }
+
+    @GetMapping("/status/{status}")
+    public List<NotificationDto> getByStatus(@PathVariable NotificationStatus status) {
+        return notificationService.getNotificationsByStatus(status).stream()
+                .map(response -> NotificationDto.builder()
+                        .title(response.getTitle())
+                        .message(response.getMessage())
+                        .channel(response.getChannel())
+                        .status(response.getStatus())
+                        .createdAt(response.getCreatedAt())
+                        .sentAt(response.getSentAt())
+                        .recipientId(response.getRecipient().getId())
+                        .build())
+                .toList();
+    }
+
+    @GetMapping("/channel/{channel}")
+    public List<NotificationDto> getByChannel(@PathVariable NotificationChannel channel) {
+        return notificationService.getNotificationsByChannel(channel).stream()
+                        .map(response -> NotificationDto.builder()
+                                .title(response.getTitle())
+                                .message(response.getMessage())
+                                .channel(response.getChannel())
+                                .status(response.getStatus())
+                                .createdAt(response.getCreatedAt())
+                                .sentAt(response.getSentAt())
+                                .recipientId(response.getRecipient().getId())
+                                .build())
+                        .toList();
+    }
+
+    @GetMapping("/recipient/{recipientId}")
+    public List<NotificationDto> getByRecipientId(@PathVariable Long recipientId) {
+        return notificationService.getNotificationsByRecipientId(recipientId).stream()
+                        .map(response -> NotificationDto.builder()
+                                .title(response.getTitle())
+                                .message(response.getMessage())
+                                .channel(response.getChannel())
+                                .status(response.getStatus())
+                                .createdAt(response.getCreatedAt())
+                                .sentAt(response.getSentAt())
+                                .recipientId(response.getRecipient().getId())
+                                .build())
+                        .toList();
     }
 }
