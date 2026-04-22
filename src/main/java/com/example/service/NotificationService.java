@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import com.example.model.dto.NotificationDto;
 import com.example.model.entity.Notification;
@@ -24,7 +25,7 @@ public class NotificationService {
     @Transactional
     public Notification createNotification(NotificationDto request) {
 
-        User user = userRepository.findById(request.getRecipientId()).orElseThrow();
+        User user = userRepository.findById(request.getRecipientId()).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         Notification notification = new Notification();
         notification.setTitle(request.getTitle());
         notification.setMessage(request.getMessage());
