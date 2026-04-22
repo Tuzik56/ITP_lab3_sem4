@@ -1,6 +1,7 @@
 package com.example.repository;
 
 import com.example.model.entity.Notification;
+import com.example.model.entity.User;
 import com.example.model.enums.NotificationChannel;
 import com.example.model.enums.NotificationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -39,4 +40,13 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     """, nativeQuery = true)
     List<Notification> findNativeByStatusAndChannel(@Param("status") String status,
                                                     @Param("channel") String channel);
+
+    @Query("""
+    select n
+    from Notification n
+    where n.recipient = :recipient
+    and n.status = :status
+    """)
+    List<Notification> findByRecipientAndStatusCustom(@Param("recipient") User recipient,
+                                                    @Param("status") NotificationStatus status);
 }

@@ -22,29 +22,13 @@ public class NotificationController {
     public NotificationDto createNotification(@RequestBody @Valid NotificationDto request) {
         Notification response = notificationService.createNotification(request);
 
-        return NotificationDto.builder()
-                .title(response.getTitle())
-                .message(response.getMessage())
-                .channel(response.getChannel())
-                .status(response.getStatus())
-                .createdAt(response.getCreatedAt())
-                .sentAt(response.getSentAt())
-                .recipientId(response.getRecipient().getId())
-                .build();
+        return mapToDto(response);
     }
 
     @GetMapping("/all")
     public List<NotificationDto> getAllNotifications() {
         return notificationService.getAllNotifications().stream()
-                .map(response -> NotificationDto.builder()
-                        .title(response.getTitle())
-                        .message(response.getMessage())
-                        .channel(response.getChannel())
-                        .status(response.getStatus())
-                        .createdAt(response.getCreatedAt())
-                        .sentAt(response.getSentAt())
-                        .recipientId(response.getRecipient().getId())
-                        .build())
+                .map(this::mapToDto)
                 .toList();
     }
 
@@ -52,30 +36,14 @@ public class NotificationController {
     public NotificationDto getNotificationById(@PathVariable Long id) {
         Notification response = notificationService.getNotificationById(id);
 
-        return NotificationDto.builder()
-                .title(response.getTitle())
-                .message(response.getMessage())
-                .channel(response.getChannel())
-                .status(response.getStatus())
-                .createdAt(response.getCreatedAt())
-                .sentAt(response.getSentAt())
-                .recipientId(response.getRecipient().getId())
-                .build();
+        return mapToDto(response);
     }
 
     @PutMapping("/{id}")
     public NotificationDto updateNotification(@PathVariable Long id, @RequestBody @Valid NotificationDto request) {
         Notification response = notificationService.updateNotification(id, request);
 
-        return NotificationDto.builder()
-                .title(response.getTitle())
-                .message(response.getMessage())
-                .channel(response.getChannel())
-                .status(response.getStatus())
-                .createdAt(response.getCreatedAt())
-                .sentAt(response.getSentAt())
-                .recipientId(response.getRecipient().getId())
-                .build();
+        return mapToDto(response);
     }
 
     @DeleteMapping("/{id}")
@@ -87,45 +55,33 @@ public class NotificationController {
     @GetMapping("/status/{status}")
     public List<NotificationDto> getByStatus(@PathVariable NotificationStatus status) {
         return notificationService.getNotificationsByStatus(status).stream()
-                .map(response -> NotificationDto.builder()
-                        .title(response.getTitle())
-                        .message(response.getMessage())
-                        .channel(response.getChannel())
-                        .status(response.getStatus())
-                        .createdAt(response.getCreatedAt())
-                        .sentAt(response.getSentAt())
-                        .recipientId(response.getRecipient().getId())
-                        .build())
+                .map(this::mapToDto)
                 .toList();
     }
 
     @GetMapping("/channel/{channel}")
     public List<NotificationDto> getByChannel(@PathVariable NotificationChannel channel) {
         return notificationService.getNotificationsByChannel(channel).stream()
-                        .map(response -> NotificationDto.builder()
-                                .title(response.getTitle())
-                                .message(response.getMessage())
-                                .channel(response.getChannel())
-                                .status(response.getStatus())
-                                .createdAt(response.getCreatedAt())
-                                .sentAt(response.getSentAt())
-                                .recipientId(response.getRecipient().getId())
-                                .build())
+                        .map(this::mapToDto)
                         .toList();
     }
 
     @GetMapping("/recipient/{recipientId}")
     public List<NotificationDto> getByRecipientId(@PathVariable Long recipientId) {
         return notificationService.getNotificationsByRecipientId(recipientId).stream()
-                        .map(response -> NotificationDto.builder()
-                                .title(response.getTitle())
-                                .message(response.getMessage())
-                                .channel(response.getChannel())
-                                .status(response.getStatus())
-                                .createdAt(response.getCreatedAt())
-                                .sentAt(response.getSentAt())
-                                .recipientId(response.getRecipient().getId())
-                                .build())
+                        .map(this::mapToDto)
                         .toList();
+    }
+
+    private NotificationDto mapToDto(Notification response) {
+        return NotificationDto.builder()
+                .title(response.getTitle())
+                .message(response.getMessage())
+                .channel(response.getChannel())
+                .status(response.getStatus())
+                .createdAt(response.getCreatedAt())
+                .sentAt(response.getSentAt())
+                .recipientId(response.getRecipient().getId())
+                .build();
     }
 }

@@ -29,6 +29,9 @@ public class UserDto {
             message = "Email не соответствует требуемому шаблону")
     private String email;
 
+    @Pattern(regexp = "^(\\+7|8)\\d{10}$",
+            message = "Номер телефона не соответствует требуемому шаблону"
+    )
     private String phone;
 
     private String deviceToken;

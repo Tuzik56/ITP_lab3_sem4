@@ -58,6 +58,10 @@ public class NotificationService {
         notification.setChannel(request.getChannel());
         notification.setStatus(request.getStatus());
 
+        if (request.getStatus() == NotificationStatus.SENT) {
+            notification.setSentAt(LocalDateTime.now());
+        }
+
         return notificationRepository.save(notification);
     }
 
