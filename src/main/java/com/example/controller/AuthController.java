@@ -21,4 +21,10 @@ public class AuthController {
         authService.register(request);
         return "Пользователь успешно зарегистрирован";
     }
+
+    @PostMapping("/register-admin")
+    public String registerAdmin(@RequestBody @Valid RegisterRequest request) {
+        authService.registerAdmin(request);
+        return "Администратор успешно зарегистрирован";
+    }
 }

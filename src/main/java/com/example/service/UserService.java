@@ -3,7 +3,9 @@ package com.example.service;
 import lombok.RequiredArgsConstructor;
 import com.example.model.dto.UserDto;
 import com.example.model.entity.User;
+import com.example.model.dto.UserMapper;
 import com.example.repository.UserRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,15 +16,10 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     public User createUser(UserDto request) {
-        User user = new User();
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setPhone(request.getPhone());
-        user.setDeviceToken(request.getDeviceToken());
-        user.setTelegramChatId(request.getTelegramChatId());
-        user.setCreatedAt(LocalDateTime.now());
+        User user = userMapper.toEntity(request);
         return userRepository.save(user);
     }
 
@@ -44,6 +41,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(Long id) {
         User user = userRepository.findById(id).orElseThrow();
         userRepository.delete(user);

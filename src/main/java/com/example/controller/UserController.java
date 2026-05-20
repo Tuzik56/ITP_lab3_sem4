@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.model.dto.UserMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import com.example.model.dto.UserDto;
@@ -15,59 +16,32 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @PostMapping("/add")
     public UserDto createUser(@RequestBody @Valid UserDto request) {
         User response = userService.createUser(request);
-        return UserDto.builder()
-                .name(response.getName())
-                .email(response.getEmail())
-                .phone(response.getPhone())
-                .telegramChatId(response.getTelegramChatId())
-                .deviceToken(response.getDeviceToken())
-                .createdAt(response.getCreatedAt())
-                .build();
+        return userMapper.toDto(response);
     }
 
     @GetMapping("/all")
     public List<UserDto> getAllUsers() {
         return userService.getAllUsers().stream()
-                .map(r -> UserDto.builder()
-                        .name(r.getName())
-                        .email(r.getEmail())
-                        .phone(r.getPhone())
-                        .telegramChatId(r.getTelegramChatId())
-                        .deviceToken(r.getDeviceToken())
-                        .createdAt(r.getCreatedAt())
-                        .build())
+                .map(userMapper::toDto)
                 .toList();
     }
 
     @GetMapping("/{id}")
     public UserDto getUserById(@PathVariable Long id) {
         User response = userService.getUserById(id);
-        return UserDto.builder()
-                .name(response.getName())
-                .email(response.getEmail())
-                .phone(response.getPhone())
-                .telegramChatId(response.getTelegramChatId())
-                .deviceToken(response.getDeviceToken())
-                .createdAt(response.getCreatedAt())
-                .build();
+        return userMapper.toDto(response);
     }
 
     @PutMapping("/{id}")
     public UserDto updateUser(@PathVariable Long id, @RequestBody @Valid
     UserDto request) {
         User response = userService.updateUser(id, request);
-        return UserDto.builder()
-                .name(response.getName())
-                .email(response.getEmail())
-                .phone(response.getPhone())
-                .telegramChatId(response.getTelegramChatId())
-                .deviceToken(response.getDeviceToken())
-                .createdAt(response.getCreatedAt())
-                .build();
+        return userMapper.toDto(response);
     }
 
     @DeleteMapping("/{id}")

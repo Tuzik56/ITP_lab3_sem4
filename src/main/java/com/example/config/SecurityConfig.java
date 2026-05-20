@@ -1,5 +1,6 @@
 package com.example.config;
 
+import com.example.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import com.example.security.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity
@@ -20,6 +22,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -53,11 +56,15 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                         .sessionManagement(session -> session
-                                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                         )
                         .authenticationProvider(authenticationProvider())
+                        .addFilterBefore(
+                            jwtAuthenticationFilter,
+                            UsernamePasswordAuthenticationFilter.class
+                        )
                         .formLogin(form -> form.disable())
-                        .httpBasic(httpBasic -> {});
+                        .httpBasic(httpBasic -> httpBasic.disable());
         return http.build();
     }
 }
